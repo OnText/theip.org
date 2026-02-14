@@ -1519,7 +1519,7 @@ function Navbar() {
 // Hero 区域
 // ============================================
 function Hero() {
-  const { t } = useI18n()
+  const { t, lang } = useI18n()
   const { theme } = useTheme()
   
   return (
