@@ -61,9 +61,10 @@ interface I18nContextType {
 
 const I18nContext = createContext<I18nContextType | null>(null)
 
-const useI18n = () => {
+// 导出useI18n，后续其他文件要用也能直接导入
+export const useI18n = () => {
   const context = useContext(I18nContext)
-  // 核心修改1：预渲染/无context时不抛错，返回兜底值（避免崩溃）
+  // 预渲染/无context时不抛错，返回兜底值（避免崩溃）
   if (!context) {
     return {
       lang: 'zh' as Language,
@@ -71,9 +72,22 @@ const useI18n = () => {
       t: (key: string) => translations.zh[key] || key // 优化：优先返回中文翻译，无则返回key
     };
   }
-  // 核心修改2：给lang加兜底，防止lang为undefined导致后续异常
+  // 给lang加兜底，防止lang为undefined导致后续异常
   const { lang = 'zh', setLang, t } = context;
   return { lang, setLang, t };
+}
+
+// 🌟 补上你代码里缺失的useTheme钩子（组件里一直在用，之前没定义）
+export const useTheme = () => {
+  const context = useContext(ThemeContext);
+  // 预渲染兜底，避免服务端构建报错
+  if (!context) {
+    return {
+      theme: 'dark' as Theme,
+      setTheme: () => {},
+    };
+  }
+  return context;
 }
 
 // 完整的翻译配置
