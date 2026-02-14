@@ -2538,7 +2538,7 @@ export default function Home() {
 
   return (
     <AppProvider>
-      <div className={`min-h-screen ${useTheme ? '' : ''}`}>
+      <div className="min-h-screen">
         <Navbar />
         <TableOfContents activeSection={activeSection} />
         <main className="max-w-7xl mx-auto">
