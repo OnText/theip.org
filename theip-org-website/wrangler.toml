@@ -1,3 +1,0 @@
-name = "theip-org"
-main = "./.opennext/server.js"
-compatibility_date = "2024-03-25"
