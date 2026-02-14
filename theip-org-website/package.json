@@ -81,7 +81,7 @@
     "zustand": "^5.0.6"
   },
   "devDependencies": {
-    "@cloudflare/next-on-pages": "^1.12.1"
+    "opennext": "^2.0.0",
     "@tailwindcss/postcss": "^4",
     "@types/react": "^19",
     "@types/react-dom": "^19",
