@@ -1,8 +1,8 @@
 {
   "scripts": {
     "dev": "next dev -p 3000 2>&1 | tee dev.log",
-    "build": "next build", // ✅ 只保留这一句，删掉后面的 cp 命令
-    "start": "next start", // ✅ 也改回最简单的
+    "build": "next build", 
+    "start": "next start", 
     "lint": "eslint .",
     "db:push": "prisma db push",
     "db:generate": "prisma generate",
