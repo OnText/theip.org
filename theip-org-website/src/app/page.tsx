@@ -11,6 +11,22 @@ import {
 } from 'lucide-react'
 
 // ============================================
+// 工具函数：节流函数 ✨ 新增（适配 Cloudflare 环境）
+// ============================================
+const throttle = (func: Function, delay: number) => {
+  // 替换 NodeJS.Timeout 为 number（Cloudflare 环境中 setTimeout 返回数字型 timer ID）
+  let timeout: number | null = null
+  return (...args: any[]) => {
+    if (!timeout) {
+      timeout = setTimeout(() => {
+        func.apply(null, args)
+        timeout = null
+      }, delay)
+    }
+  }
+}
+
+// ============================================
 // 站点配置 - 预留 CDN URL 位置
 // ============================================
 const SITE_CONFIG = {
