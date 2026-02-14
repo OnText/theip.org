@@ -48,11 +48,21 @@ interface ThemeContextType {
 
 const ThemeContext = createContext<ThemeContextType | null>(null)
 
-const useTheme = () => {
-  const context = useContext(ThemeContext)
-  if (!context) throw new Error('useTheme must be used within ThemeProvider')
-  return context
-}
+// 修改后（加默认值 + 预渲染兜底）
+const useI18n = () => {
+  const context = useContext(I18nContext);
+  // 1. 预渲染时兜底默认值（避免抛出错误 + lang 未定义）
+  if (!context) {
+    return {
+      lang: 'zh' as Language, // 强制默认中文，也可改'en'
+      setLang: () => {}, // 空函数兜底（预渲染时无交互）
+      t: (key: string) => translations.zh[key] || key // 兜底翻译逻辑
+    };
+  }
+  // 2. 确保 lang 有默认值（防止 context 里 lang 未初始化）
+  const { lang = 'zh', setLang, t } = context;
+  return { lang, setLang, t };
+};
 
 // ============================================
 // 国际化配置
@@ -69,8 +79,17 @@ const I18nContext = createContext<I18nContextType | null>(null)
 
 const useI18n = () => {
   const context = useContext(I18nContext)
-  if (!context) throw new Error('useI18n must be used within I18nProvider')
-  return context
+  // 核心修改1：预渲染/无context时不抛错，返回兜底值（避免崩溃）
+  if (!context) {
+    return {
+      lang: 'zh' as Language,
+      setLang: () => {}, // 空函数兜底（预渲染无交互，不影响功能）
+      t: (key: string) => key // 🌟 这里改了：避免translations未定义报错
+    };
+  }
+  // 核心修改2：给lang加兜底，防止lang为undefined导致后续异常
+  const { lang = 'zh', setLang, t } = context;
+  return { lang, setLang, t };
 }
 
 // 完整的翻译配置
@@ -1226,14 +1245,22 @@ const translations: Record<Language, Record<string, string>> = {
 }
 
 // ============================================
-// Provider 组件
+// Provider 组件（修复预渲染 lang 未定义）
 // ============================================
 function AppProvider({ children }: { children: React.ReactNode }) {
   const [theme, setTheme] = useState<Theme>('dark')
-  const [lang, setLang] = useState<Language>('zh')
+  // 核心修改：区分预渲染/客户端环境，避免读取 localStorage 报错
+  const [lang, setLang] = useState<Language>(() => {
+    // 客户端环境才读取 localStorage，预渲染时返回默认值 'zh'
+    if (typeof window !== 'undefined') {
+      return (localStorage.getItem('lang') as Language) || 'zh';
+    }
+    return 'zh'; // 预渲染阶段强制兜底
+  })
   
+  // 核心修改：t 函数加双重兜底，防止 lang 异常导致 translations[lang] 不存在
   const t = (key: string): string => {
-    return translations[lang][key] || key
+    return translations[lang]?.[key] || translations.zh?.[key] || key
   }
   
   return (
