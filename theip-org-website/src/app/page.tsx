@@ -48,22 +48,6 @@ interface ThemeContextType {
 
 const ThemeContext = createContext<ThemeContextType | null>(null)
 
-// 修改后（加默认值 + 预渲染兜底）
-const useI18n = () => {
-  const context = useContext(I18nContext);
-  // 1. 预渲染时兜底默认值（避免抛出错误 + lang 未定义）
-  if (!context) {
-    return {
-      lang: 'zh' as Language, // 强制默认中文，也可改'en'
-      setLang: () => {}, // 空函数兜底（预渲染时无交互）
-      t: (key: string) => translations.zh[key] || key // 兜底翻译逻辑
-    };
-  }
-  // 2. 确保 lang 有默认值（防止 context 里 lang 未初始化）
-  const { lang = 'zh', setLang, t } = context;
-  return { lang, setLang, t };
-};
-
 // ============================================
 // 国际化配置
 // ============================================
@@ -84,7 +68,7 @@ const useI18n = () => {
     return {
       lang: 'zh' as Language,
       setLang: () => {}, // 空函数兜底（预渲染无交互，不影响功能）
-      t: (key: string) => key // 🌟 这里改了：避免translations未定义报错
+      t: (key: string) => translations.zh[key] || key // 优化：优先返回中文翻译，无则返回key
     };
   }
   // 核心修改2：给lang加兜底，防止lang为undefined导致后续异常
