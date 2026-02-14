@@ -2025,7 +2025,7 @@ function IPv6Section() {
 // 对比表格
 // ============================================
 function ComparisonSection() {
-  const { t } = useI18n()
+  const { t, lang } = useI18n()
   const { theme } = useTheme()
   
   const comparisons = [
