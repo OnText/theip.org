@@ -1,15 +1,13 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  output: "standalone", // 原有配置（适配next-on-pages）
   /* config options here */
   typescript: {
-    ignoreBuildErrors: true, // 原有配置
+    ignoreBuildErrors: true, // 可以暂时保留，避免TypeScript报错阻断构建
   },
-  reactStrictMode: false, // 原有配置
-  // 新增：适配Cloudflare Pages的图片处理（避免构建/部署后图片加载异常）
+  reactStrictMode: false,
   images: {
-    unoptimized: true,
+    unoptimized: true, // ✅ 这个保留，Cloudflare Pages需要
   },
 };
 
