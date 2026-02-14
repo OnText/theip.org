@@ -2046,7 +2046,6 @@ function ComparisonSection() {
     [lang === 'zh' ? '移动性' : 'Mobility', 'Mobile IPv4', 'Mobile IPv6 (native)'],
   ]
   
-  const lng = lang // capture for closure
   
   return (
     <section id="comparison" className="py-10 sm:py-16 px-3 sm:px-6 lg:px-8 scroll-mt-16">
