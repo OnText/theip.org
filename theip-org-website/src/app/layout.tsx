@@ -3,7 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { Toaster } from "@/components/ui/toaster";
 // 🌟 新增：引入你定义的 useI18n 钩子
-import { useI18n } from "@/lib/i18n"; 
+import { useI18n } from "./page"; // 相对路径，指向page.tsx
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
